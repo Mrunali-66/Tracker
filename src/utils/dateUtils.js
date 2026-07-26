@@ -21,12 +21,11 @@ export function parseKey(key) {
   return new Date(y, m - 1, d);
 }
 
-// The tracked window: tomorrow (relative to whenever the app is opened)
+// The tracked window: today (relative to whenever the app is opened)
 // through December 31 of that year.
 export function getTrackedRange() {
   const realToday = dateAtMidnight(new Date());
   const trackStart = new Date(realToday);
-  trackStart.setDate(trackStart.getDate() + 1);
   let rangeEnd = new Date(trackStart.getFullYear(), 11, 31);
   if (rangeEnd.getTime() < trackStart.getTime()) {
     rangeEnd = new Date(trackStart.getFullYear() + 1, 11, 31);
