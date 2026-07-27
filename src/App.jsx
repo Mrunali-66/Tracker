@@ -6,6 +6,7 @@ import Legend from "./components/Legend.jsx";
 import MonthTabs from "./components/MonthTabs.jsx";
 import Calendar from "./components/Calendar.jsx";
 import DayModal from "./components/DayModal.jsx";
+import History from "./components/History.jsx";
 import Confetti from "./components/Confetti.jsx";
 import Toast from "./components/Toast.jsx";
 import { useHabitData } from "./hooks/useHabitData.js";
@@ -40,6 +41,7 @@ export default function App() {
   const [openKey, setOpenKey] = useState(null);
   const [celebratingKey, setCelebratingKey] = useState(null);
   const [toastMsg, setToastMsg] = useState("");
+  const [showHistory, setShowHistory] = useState(false);
   const [toastVisible, setToastVisible] = useState(false);
   const confettiRef = useRef(null);
   const wasCompleteRef = useRef({});
@@ -93,7 +95,8 @@ export default function App() {
     showToast("Backup downloaded ✓");
   }, [data, TASKS, trackStart, rangeEnd, showToast]);
 
-  const activeMonth = monthList[activeMonthIndex];
+  const handleShowHistory = useCallback(() => setShowHistory(true), []);
+const activeMonth = monthList[activeMonthIndex];
   const activeMonthKeys = activeMonth
     ? monthKeysFor(activeMonth.year, activeMonth.month)
     : [];
@@ -103,7 +106,7 @@ export default function App() {
 
   return (
     <div className="wrap">
-      <Header realToday={realToday} onExport={handleExport} />
+      <Header realToday={realToday} onExport={handleExport} onShowHistory={handleShowHistory} />
 
       <RangeBanner
         trackStart={trackStart}
@@ -130,18 +133,27 @@ export default function App() {
         trackStartYear={trackStart.getFullYear()}
       />
 
-      {activeMonth && (
-        <Calendar
-          year={activeMonth.year}
-          month={activeMonth.month}
-          trackStart={trackStart}
-          rangeEnd={rangeEnd}
-          realToday={realToday}
+      {showHistory ? (
+        <History
+          trackedKeys={trackedKeys}
           dayPct={dayPct}
-          monthPct={activeMonthPct}
           onDayClick={openModal}
-          celebratingKey={celebratingKey}
+          onBack={() => setShowHistory(false)}
         />
+      ) : (
+        activeMonth && (
+          <Calendar
+            year={activeMonth.year}
+            month={activeMonth.month}
+            trackStart={trackStart}
+            rangeEnd={rangeEnd}
+            realToday={realToday}
+            dayPct={dayPct}
+            monthPct={activeMonthPct}
+            onDayClick={openModal}
+            celebratingKey={celebratingKey}
+          />
+        )
       )}
 
       <footer className="note">

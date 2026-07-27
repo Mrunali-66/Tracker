@@ -1,7 +1,7 @@
 import React from "react";
 import { WEEKDAYS, MONTH_NAMES } from "../utils/dateUtils.js";
 
-export default function Header({ realToday, onExport }) {
+export default function Header({ realToday, onExport, onShowHistory }) {
   const todayLabel =
     WEEKDAYS[realToday.getDay()] +
     ", " +
@@ -45,7 +45,7 @@ export default function Header({ realToday, onExport }) {
             />
           </svg>
           Download my data
-        </button>
+        <button className="history-btn" onClick={onShowHistory}>History</button>
         <div className="today-pill">{todayLabel}</div>
       </div>
     </header>
